@@ -6,9 +6,9 @@
         <el-form-item>
           <el-input size="large" 
           clearable 
-          placeholder="请输入要查找的关键词" 
+          placeholder="请输入要查找的关键词(至少三个字)" 
           v-model="formData.keyword" 
-          @keyup.enter="search"
+          @keyup.enter.native="search"
           @focus="startSearchHandler"
           @blur="endSearchHandler"
           @change="changeInput"

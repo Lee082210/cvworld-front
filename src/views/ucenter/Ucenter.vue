@@ -85,7 +85,7 @@
 import UcenterEditUserInfo from './UcenterEditUserInfo.vue'
 import UserIntegralRecord from './UserIntegralRecord.vue';
 import ArticleListItem from '@/views/forum/ArticleListItem.vue'
-import { ref, getCurrentInstance, watch } from "vue";
+import { ref, getCurrentInstance, watch, nextTick } from "vue";
 import { useRouter, useRoute } from "vue-router"
 import { useStore } from 'vuex'
 const { proxy } = getCurrentInstance()
@@ -148,6 +148,7 @@ const loadArticle = async () => {
 const isCurrentUser = ref(false)
 //重置当前用户
 const resetCurrentUser = ()=>{
+  // 重新设定当前用户
   const loginUserInfo = store.getters.getLoginUserInfo
   if(loginUserInfo && loginUserInfo.userId === userId.value){
     isCurrentUser.value = true
@@ -166,10 +167,12 @@ watch(
 watch(
   ()=>route.params.userId,
   (newVal, oldVal)=>{
-    userId.value = newVal
-    resetCurrentUser()
-    loadUserInfo()
-    loadArticle()
+    if(newVal){
+      userId.value = newVal
+      resetCurrentUser()
+      loadUserInfo()
+      loadArticle()
+    }
   },
   {immediate: true, deep: true}
 )
@@ -184,7 +187,7 @@ const resetUserInfoHandler = (data)=>{
   userInfo.value = data
 }
 
-//修改用户信息
+//获取用户积分
 const ucenterIntegralRecordRef = ref(null)
 const showIntegralRecord = ()=>{
   ucenterIntegralRecordRef.value.showRecord()

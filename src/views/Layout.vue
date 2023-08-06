@@ -8,7 +8,7 @@
         </router-link>
         <!-- 板块信息 -->
         <div class="menu-panel">
-          <router-link :class="['menu-item home', activePboardId == 0 ? 'active' : '']" to="/">
+          <router-link :class="['menu-item home', activePboardId == undefined ? 'active' : '']" to="/">
             首页</router-link>
           <template v-for="board in boardList">
             <el-popover placement="bottom-start" :width="300" trigger="hover" v-if="board.children.length > 0">
@@ -120,7 +120,7 @@
                 </span>
               </div>
             </div>
-            <div class="info">一个干货满满的编程社区</div>
+            <div class="info">cv论坛欢迎您，愿你在cv的日子里生活如意，事事顺心。</div>
           </el-col>
           <el-col :span="6" class="item">
             <div class="title">网站相关</div>
@@ -135,7 +135,10 @@
             <div class="title">友情链接</div>
           </el-col>
           <el-col :span="6" class="item">
-            <div class="title">关注站长</div>
+            <div class="title-img">
+              <span>扫码关注站长</span>
+              <img src="../assets/images/wechatid.JPG" alt=""> 
+            </div>
           </el-col>
         </el-row>
       </div>
@@ -159,33 +162,33 @@ const store = useStore()
 
 const logoInfo = ref([
   {
-    letter: 'E',
+    letter: 'C',
     color: '#3285FF'
   },
   {
-    letter: 'a',
-    color: '#FB3624'
-  },
-  {
-    letter: 's',
-    color: '#FFBA02'
-  },
-  {
-    letter: 'y',
+    letter: 'V',
     color: '#3285FF'
   },
   {
-    letter: 't',
-    color: '#25B24E'
+    letter: 'World',
+    color: '#4d4e50'
   },
-  {
-    letter: 't',
-    color: '#FD3324'
-  },
-  {
-    letter: 'c',
-    color: '#FFBA02'
-  },
+  // {
+  //   letter: 'y',
+  //   color: '#3285FF'
+  // },
+  // {
+  //   letter: 't',
+  //   color: '#25B24E'
+  // },
+  // {
+  //   letter: 't',
+  //   color: '#FD3324'
+  // },
+  // {
+  //   letter: 'c',
+  //   color: '#FFBA02'
+  // },
 ])
 const api = {
   getUserInfo: '/getUserInfo',
@@ -310,9 +313,8 @@ const activePboardId = ref(0)
 watch(
   () => store.state.activePboardId,
   (newVal, oldVal) => {
-    if (newVal != undefined) {
-      activePboardId.value = newVal
-    }
+    // if (newVal != undefined) {
+    activePboardId.value = newVal
   },
   { immediate: true, deep: true }
 )
@@ -566,6 +568,16 @@ watch(
     .title{
       font-size: 18px;
       margin-bottom: 10px;
+    }
+    .title-img{
+      font-size: 16px;
+      width: 100px;
+      height: 100px;
+      text-align: center;
+      img{
+        width: 100%;
+        height: 100%;
+      }
     }
     a{
       font-size: 14px;

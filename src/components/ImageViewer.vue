@@ -1,4 +1,5 @@
 <template>
+  <!-- 图片预览 -->
   <div class="image-viewer">
     <el-image-viewer :initial-index="previewImgIndex"  
     hide-on-click-modal 

@@ -74,19 +74,19 @@ const formDataRef = ref()
 
 //校验
 const emit = defineEmits(["resetUserInfo"])
-const updateUserInfoHandler = ()=>{
+const updateUserInfoHandler = () =>{
   formDataRef.value.validate(async (valid)=>{
     if(!valid) return
     let params = {}
-    Object.assign(params, formData.value)
+    params = Object.assign(params, formData.value)
     let result = await proxy.Request({
       url: api.updateUserInfo,
-      params
+      params: params
     })
     if(!result) return
     dialogConfig.show = false
     if(params.avatar instanceof File){
-      router.go(0) //用户更换了头像，刷新页面
+      router.go(0)    //用户更换了头像，刷新页面
     }else{
       emit("resetUserInfo", params)
     }
