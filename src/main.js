@@ -8,10 +8,12 @@ import VueCookies from 'vue-cookies'
 //引入element plus
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 //我们使用sass 所以这里将base.css 改成base.scss
 import '@/assets/base.scss'
 //图标 图标在附件中
 import '@/assets/icon/iconfont.css'
+import Particles from 'particles.vue3'
 //全局方法
 import Verify from '@/utils/Verify'
 import Message from '@/utils/Message'
@@ -29,14 +31,17 @@ import EditorMarkdown from '@/components/EditorMarkdown.vue'
 import EditorHtml from '@/components/EditorHtml.vue'
 import CoverUpload from '@/components/CoverUpload.vue'
 import AttachmentSelector from '@/components/AttachmentSelector.vue'
+import BackgroundParticles from '@/components/BackgroundParticles.vue'
+
 
 
 
 const app = createApp(App)
 
-app.use(router)
-app.use(store)
+app.use(router);
+app.use(store);
 app.use(ElementPlus);
+app.use(Particles);
 app.config.globalProperties.VueCookies = VueCookies;
 app.config.globalProperties.globalInfo = {
   bodyWidth: 1300,
@@ -61,5 +66,6 @@ app.component('EditorMarkdown', EditorMarkdown)
 app.component('EditorHtml', EditorHtml)
 app.component('CoverUpload', CoverUpload)
 app.component('AttachmentSelector', AttachmentSelector)
+app.component('BackgroundParticles', BackgroundParticles)
 
 app.mount('#app')

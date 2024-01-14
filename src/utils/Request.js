@@ -7,7 +7,7 @@ const contentTypeJson = "application/json"
 
 const instance = axios.create({
   baseURL: '/api',
-  timeout: 10 * 1000,
+  timeout: 10 * 3000,
 })
 
 //请求前过滤器
@@ -26,7 +26,7 @@ instance.interceptors.request.use((config) => {
     loading.close();
   }
   Message.error("请求发送失败");
-  return Promise.reject("请求发送失败");
+  return Promise.reject("请求发送失败(promise)");
 });
 
 //请求后的过滤器
@@ -62,9 +62,9 @@ instance.interceptors.response.use(
 const request = (config) => {
   const { url, params, dataType, showLoading = true, errorCallback, showError = true } = config
     let contentType = contentTypeForm;
-    let fromData = new FormData();
+    let formData = new FormData();
     for (let key in params) {
-        fromData.append(key, params[key] == undefined ? "" : params[key]);
+      formData.append(key, params[key] == undefined ? "" : params[key]);
     }
     if (dataType != null && dataType === "json") {
         contentType = contentTypeJson;
@@ -73,7 +73,7 @@ const request = (config) => {
         'Content-Type': contentType,
         'X-Requested-With': 'XMLHttpRequest',
     }
-    return instance.post(url, fromData, {
+    return instance.post(url, formData, {
         headers: headers,
         showLoading: showLoading,
         errorCallback: errorCallback,

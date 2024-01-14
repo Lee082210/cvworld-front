@@ -1,4 +1,5 @@
 <template>
+  <!-- 评论区功能 -->
   <div class="comment-body">
     <div class="comment-title">
       <div class="title">评论<span class="count">{{ commentListInfo.totalCount }}</span></div>

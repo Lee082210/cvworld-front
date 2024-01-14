@@ -1,4 +1,5 @@
 <template>
+  <!-- 发表评论功能 -->
   <div class="post-comment-panel">
     <Avatar :width="avatarWidth" :userId="userId"></Avatar>
     <div class="comment-form">

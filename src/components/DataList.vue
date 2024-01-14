@@ -1,4 +1,5 @@
 <template>
+  <!-- 分页功能 -->
   <div v-if="!loading && dataSource.list!=null && dataSource.list.length==0">
     <NoData :msg="noDataMsg"></NoData>
   </div>
@@ -49,7 +50,10 @@ const handlePageNoChange = (pageNo) =>{
 
 <style lang="scss" >
 .pagination{
-  padding: 10px 0px 5px 10px;
+  padding: 10px 10px 10px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .skeleton{
   padding: 15px;

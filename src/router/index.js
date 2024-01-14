@@ -58,6 +58,11 @@ const router = createRouter({
       ]
     },
     {
+      path:"/login",
+      name:"登录页",
+      component:()=>import("@/views/LoginAndRegister.vue")
+    },
+    {
       path:"/:pathMatch(.*)*",
       name:"错误页",
       component:()=>import("@/views/Error404.vue")

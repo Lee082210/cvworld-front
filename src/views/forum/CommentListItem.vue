@@ -1,4 +1,5 @@
 <template>
+  <!-- 评论区列表显示、二级评论 -->
   <div class="comment-item">
     <Avatar :userId="commentData.userId" :width="50"></Avatar>
     <div class="commnet-info">

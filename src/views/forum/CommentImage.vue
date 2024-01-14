@@ -1,4 +1,5 @@
 <template>
+  <!-- 评论区图片功能 -->
   <div>
     <el-image
     class="comment-img"

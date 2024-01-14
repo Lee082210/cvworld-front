@@ -3,9 +3,20 @@
     <div class="header" v-show="showHeader">
       <div class="header-content" :style="{ width: proxy.globalInfo.bodyWidth + 'px' }">
         <!-- logo -->
+        <transition
+          name="animate__animated animate__bounce"
+          enter-active-class="animate__backInLeft"
+          appear
+        >
         <router-link to="/" class="logo">
           <span v-for="item in logoInfo" :style="{ color: item.color }">{{ item.letter }}</span>
         </router-link>
+        </transition>
+        <transition
+          name="animate__animated animate__bounce"
+          enter-active-class="animate__fadeInRight"
+          appear
+        >
         <!-- 板块信息 -->
         <div class="menu-panel">
           <router-link :class="['menu-item home', activePboardId == undefined ? 'active' : '']" to="/">
@@ -28,10 +39,17 @@
           </template>
 
         </div>
+      </transition>
+
+      <transition
+          name="animate__animated animate__bounce"
+          enter-active-class="animate__fadeInUp"
+          appear
+        >
         <!-- 登录、注册、用户信息 -->
         <div class="user-info-panel">
           <div class="op-btn">
-            <el-button type="primary" class="op-btn" @click="newPost">
+            <el-button type="primary" class="op-btn" @click="isPost">
               发帖<span class="iconfont icon-add"></span>
             </el-button>
             <el-button type="primary" class="op-btn" @click="goSearch">
@@ -95,27 +113,28 @@
               </el-dropdown>
             </div>
           </template>
-          <el-button-group :style="{ 'margin-left': '10px' }" v-else>
-            <el-button type="primary" plain @click="loginAndRegister(1)">登录</el-button>
-            <el-button type="primary" plain @click="loginAndRegister(0)">注册</el-button>
+          <el-button-group :style="{ 'margin-left': '10px;' }" v-else>
+            <el-button type="primary" class="op-btn" @click="loginAndRegister(1)">
+              登录<span class="iconfont icon-user"></span>
+            </el-button>
+            <!-- <el-button type="primary" plain @click="loginAndRegister(0)">注册</el-button> -->
           </el-button-group>
 
         </div>
+      </transition>
       </div>
     </div>
-    <!-- <Dialog :show="showDialog" :buttons="buttons" @close="showDialog = false">内容内容内容</Dialog> -->
     <div class="body-content">
       <router-view></router-view>
     </div>
     <!-- 底部footer -->
     <div class="footer" v-if="showFooter">
-      <div class="footer-content container-body"
-      :style="{ width: proxy.globalInfo.bodyWidth + 'px' }">
+      <div class="footer-content container-body" :style="{ width: proxy.globalInfo.bodyWidth + 'px' }">
         <el-row>
           <el-col :span="6" class="item">
             <div class="logo">
               <div class="logo-letter">
-                <span v-for="item in logoInfo" :style="{color: item.color}">
+                <span v-for="item in logoInfo" :style="{ color: item.color }">
                   {{ item.letter }}
                 </span>
               </div>
@@ -133,26 +152,33 @@
           </el-col>
           <el-col :span="6" class="item">
             <div class="title">友情链接</div>
+            <div><a href="http://liqicheng.top">友情链接</a></div>
           </el-col>
           <el-col :span="6" class="item">
             <div class="title-img">
-              <span>扫码关注站长</span>
-              <img src="../assets/images/wechatid.JPG" alt=""> 
+              <span>扫码联系我</span>
+              <img src="../assets/images/wechatid.jpg" alt="">
             </div>
           </el-col>
         </el-row>
       </div>
     </div>
-    <!-- 登录注册 -->
-    <LoginAndRegister ref="loginRegisterRef"></LoginAndRegister>
     <!-- 回到顶部 -->
     <el-backtop :right="100" :bottom="100"></el-backtop>
+    <!-- 未登录状态操作时发送弹窗引导登录 -->
+    <Dialog :show="dialogConfig.show" 
+    :buttons="dialogConfig.buttons" 
+    :title="dialogConfig.title" 
+    :showCancel="true"
+    @close="dialogConfig.show = false">
+    <span :style="{'text-align': 'center;'}">当前为未登录状态，是否前往登录页？</span>
+    </Dialog>
   </div>
 </template>
 
 <script setup>
-import LoginAndRegister from './LoginAndRegister.vue'
-import { ref, reactive, getCurrentInstance, onMounted, watch } from "vue";
+import 'animate.css'
+import { ref, reactive, getCurrentInstance, onMounted, watch, nextTick } from "vue";
 import { useRouter, useRoute } from "vue-router"
 import { useStore } from 'vuex'
 const { proxy } = getCurrentInstance()
@@ -162,33 +188,13 @@ const store = useStore()
 
 const logoInfo = ref([
   {
-    letter: 'C',
-    color: '#3285FF'
-  },
-  {
-    letter: 'V',
+    letter: 'CV',
     color: '#3285FF'
   },
   {
     letter: 'World',
     color: '#4d4e50'
   },
-  // {
-  //   letter: 'y',
-  //   color: '#3285FF'
-  // },
-  // {
-  //   letter: 't',
-  //   color: '#25B24E'
-  // },
-  // {
-  //   letter: 't',
-  //   color: '#FD3324'
-  // },
-  // {
-  //   letter: 'c',
-  //   color: '#FFBA02'
-  // },
 ])
 const api = {
   getUserInfo: '/getUserInfo',
@@ -197,6 +203,18 @@ const api = {
   logout: "/logout",
   getSysSetting: "/getSysSetting",
 }
+
+const dialogConfig = reactive({
+  show: false,
+  title: '提示',
+  buttons: [{
+    type: 'primary',
+    text: '确定',
+    click: () => {
+      newPost()
+    }
+  }]
+})
 
 const showHeader = ref(true)
 
@@ -228,18 +246,11 @@ const initScroll = () => {
   })
 }
 
-// const showDialog = ref(true)
-// const buttons = ([
-//   {
-//     text: '确定',
-//     type: 'primary'
-//   }
-// ])
-
 //登陆注册
-const loginRegisterRef = ref()
-const loginAndRegister = (type) => {
-  loginRegisterRef.value.showPanel(type)
+const opType = ref()
+const loginAndRegister =  (type) => {
+  opType.value = type
+  router.push('/login')
 }
 
 onMounted(() => {
@@ -331,18 +342,25 @@ watch(
   { immediate: true, deep: true }
 )
 
+const isPost = ()=>{
+  if (!store.getters.getLoginUserInfo) {
+    dialogConfig.show = true
+  } else {
+    newPost()
+  }
+}
 //发布文章
 const newPost = () => {
-  //判断是否登录状态
-  if (!store.getters.getLoginUserInfo) {
-    loginAndRegister(1)
-  } else {
-    router.push("/newPost")
-  }
+    //判断是否登录状态
+    if (!store.getters.getLoginUserInfo) {
+      loginAndRegister(1)
+    } else {
+      router.push("/newPost")
+    }  
 }
 
 //点击我的主页跳转用户中心
-const gotoUcnter = (userId)=>{
+const gotoUcnter = (userId) => {
   router.push(`/user/${userId}`)
 }
 
@@ -362,63 +380,63 @@ const loadMessageCount = async () => {
 }
 //监听消息数量的变化
 watch(
-  ()=>store.state.messageCountInfo,
-  (newVal, oldVal)=>{
+  () => store.state.messageCountInfo,
+  (newVal, oldVal) => {
     messageCountInfo.value = newVal || {}
   },
-  {immediate: true, deep: true}
+  { immediate: true, deep: true }
 )
 
 //用户退出登录
-const loginOut = ()=>{
-  proxy.Confirm("确定要退出登录吗？", async ()=>{
+const loginOut = () => {
+  proxy.Confirm("确定要退出登录吗？", async () => {
     let result = await proxy.Request({
       url: api.logout
     })
-    if(!result) return
+    if (!result) return
     store.commit("updateLoginUserInfo", null)
   })
 }
 //监听用户是否登录状态，判断是否要请求消息喇叭接口
 watch(
-  ()=>store.state.loginUserInfo,
-  (newVal, oldVal)=>{
-    if(newVal){
+  () => store.state.loginUserInfo,
+  (newVal, oldVal) => {
+    if (newVal) {
       loadMessageCount()
     }
   },
-  {immediate: true, deep: true}
+  { immediate: true, deep: true }
 )
 
 // 获取系统配置
-const loadSysSetting = async()=>{
+const loadSysSetting = async () => {
   let result = await proxy.Request({
-     url:api.getSysSetting,
+    url: api.getSysSetting,
   })
-  if(!result){
+  if (!result) {
     return;
   }
   // 保存系统设置
-  store.commit("saveSysSetting",result.data)
+  store.commit("saveSysSetting", result.data)
 }
 
 // 搜索
-const goSearch = ()=>{
+const goSearch = () => {
   router.push('/search')
 }
 
 //是否展示底部
 const showFooter = ref(true)
 watch(
-  ()=>route.path,
-  (newVal, oldVal)=>{
-    if(newVal.indexOf("newPost") != -1 || newVal.indexOf("editPost") != -1){
+  () => route.path,
+  (newVal, oldVal) => {
+    if (newVal.indexOf("newPost") != -1 || newVal.indexOf("editPost") != -1) {
       showFooter.value = false
-    }else{
+    } else {
       showFooter.value = true
     }
   },
-  {immediate: true, deep: true}
+  { immediate: true, deep: true }
 )
 </script>
 
@@ -430,7 +448,6 @@ watch(
   position: fixed;
   box-shadow: 0px 2px 6px 0px #ddd;
   z-index: 1000;
-  // text-align: center;
   background: #fff;
 
   .header-content {
@@ -453,7 +470,7 @@ watch(
       flex: 1;
 
       .menu-item {
-        margin-left: 10px;
+        margin-left: 20px;
         cursor: pointer;
       }
 
@@ -462,6 +479,9 @@ watch(
       }
 
       .active {
+        // border-radius: 15px;
+        // padding: 5px 15px;
+        // background-color: rgba(50, 133, 255, 0.3);
         color: var(--link);
       }
     }
@@ -472,6 +492,8 @@ watch(
       align-items: center;
 
       .op-btn {
+        margin-right: 5px;
+
         .iconfont {
           margin-left: 4px;
         }
@@ -483,12 +505,11 @@ watch(
 
       .message-info {
         cursor: pointer;
-        margin-left: 5px;
-        margin-right: 35px;
+        margin: 0px 20px 0px 15px;
 
         .icon-message {
           font-size: x-large;
-          color: rgb(147, 147, 147);
+          color: #3285FF;
         }
 
       }
@@ -540,9 +561,11 @@ watch(
 .message-item {
   display: flex;
   justify-content: space-around;
+
   .text {
     flex: 1;
   }
+
   .count-tag {
     height: 15px;
     min-width: 20px;
@@ -556,45 +579,56 @@ watch(
     margin-left: 10px;
   }
 }
-.footer{
-  background: #fff;
+
+.footer {
   height: 140px;
   margin-top: 10px;
-  .footer-content{
+  background: #bdc3c7;
+  /* fallback for old browsers */
+  // background: -webkit-linear-gradient(to right, #4a6888, #bdc3c7);  /* Chrome 10-25, Safari 5.1-6 */
+  // background: linear-gradient(to right, #4a6888, #bdc3c7); 
+
+  .footer-content {
     padding-top: 10px;
   }
-  .item{
+
+  .item {
     text-align: left;
-    .title{
+
+    .title {
       font-size: 18px;
       margin-bottom: 10px;
     }
-    .title-img{
+
+    .title-img {
       font-size: 16px;
       width: 100px;
       height: 100px;
       text-align: center;
-      img{
+
+      img {
         width: 100%;
         height: 100%;
       }
     }
-    a{
+
+    a {
       font-size: 14px;
       text-decoration: none;
       color: var(--text2);
       line-height: 25px;
     }
-    .logo{
-      .logo-letter{
+
+    .logo {
+      .logo-letter {
         font-size: 30px;
         cursor: pointer;
       }
     }
-    .info{
+
+    .info {
       margin-top: 20px;
-      color:rgb(93,91,91);
+      color: rgb(93, 91, 91);
     }
   }
-}
-</style>
+}</style>

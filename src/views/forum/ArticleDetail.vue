@@ -1,4 +1,5 @@
 <template>
+  <!-- 文章详情页 -->
   <div class="container-body article-detail-body" :style="{ width: proxy.globalInfo.bodyWidth + 'px' }"
     v-if="Object.keys(articleInfo).length > 0">
     <!-- 板块导航信息 -->
@@ -21,7 +22,7 @@
       <div class="article-detail">
         <!-- 1标题、2用户信息、3文章详情 -->
         <div class="title">
-          <el-tag v-if="articleInfo.status==0" type="danger">待审核</el-tag>
+          <el-tag v-if="articleInfo.status == 0" type="danger">待审核</el-tag>
           {{ articleInfo.title }}
         </div>
         <div class="user-info">
@@ -36,10 +37,8 @@
               <span class="iconfont icon-eye-solid">
                 {{ articleInfo.readCount == 0 ? '阅读' : articleInfo.readCount }}
               </span>
-              <router-link 
-              :to="`/editPost/${articleInfo.articleId}`" 
-              class="a-link btn-edit"
-              v-if="articleInfo.userId== currentUserInfo.userId">
+              <router-link :to="`/editPost/${articleInfo.articleId}`" class="a-link btn-edit"
+                v-if="articleInfo.userId == currentUserInfo.userId">
                 <span class="iconfont icon-edit">编辑</span>
               </router-link>
             </div>
@@ -62,38 +61,36 @@
             <el-button type="primary" size="small" @click="downloadAttachment(attachment.fileId)">下载</el-button>
           </div>
         </div>
-      </div> 
+      </div>
       <!-- 评论 -->
       <div class="comment-panel" id="view-comment" v-if="showComment && articleInfo.status == 1">
-        <CommentList 
-        v-if="articleInfo.articleId"
-        :articleId="articleInfo.articleId" 
-        :articleUserId="articleInfo.userId"
-        @updateCommentCount="updateCommentCount"
-        >
+        <CommentList v-if="articleInfo.articleId" :articleId="articleInfo.articleId" :articleUserId="articleInfo.userId"
+          @updateCommentCount="updateCommentCount">
         </CommentList>
       </div>
-      
+
     </div>
     <!-- 文章目录 -->
     <div class="toc-panel">
-        <div class="top-container">
-          <div class="toc-title">目录</div>
-          <div class="toc-list">
-            <template v-if="tocArray.length == 0">
-              <div class="no-toc">未解析到目录</div>
-            </template>
-            <template v-else>
-              <div v-for="toc in tocArray">
-                <span @click="gotoAnchor(toc.id)" 
-                :class="['toc-item', toc.id == anchorId ? 'active': '']"
-                :style="{'padding-left': toc.level * 15 + 'px'}"
-                >{{ toc.title }}</span>
-              </div>
-            </template>
-          </div>
+      <div class="top-container">
+        <div class="toc-title">目录</div>
+        <div class="toc-list">
+          <template v-if="tocArray.length == 0">
+            <div class="no-toc">未解析到目录</div>
+          </template>
+          <template v-else>
+            <div v-for="toc in tocArray">
+              <span @click="gotoAnchor(toc.id)" :class="['toc-item', toc.id == anchorId ? 'active' : '']"
+                :style="{ 'padding-left': toc.level * 15 + 'px' }">{{ toc.title }}</span>
+            </div>
+          </template>
         </div>
+      </div>
+      <!-- 相关推荐-->
+      <div class="hot-recommend">
+      </div>
     </div>
+
   </div>
 
   <!-- 左侧快捷操作按钮 -->
@@ -132,6 +129,7 @@ const route = useRoute();
 const store = useStore();
 
 const api = {
+  // getUserInfo: "/ucenter/getUserInfo",  //获取用户信息
   getArticleDetail: '/forum/getArticleDetail',
   doLike: '/forum/doLike',
   getUserDownloadInfo: '/forum/getUserDownloadInfo',
@@ -170,11 +168,11 @@ const getArticleDetail = async (articleId) => {
 }
 //监听登录用户
 watch(
-  ()=>store.getters.getLoginUserInfo,
-  (newVal,oldVal)=>{
-    currentUserInfo.value = newVal ||{}
+  () => store.getters.getLoginUserInfo,
+  (newVal, oldVal) => {
+    currentUserInfo.value = newVal || {}
   },
-  {immediate: true, deep: true}
+  { immediate: true, deep: true }
 )
 
 onMounted(() => {
@@ -256,17 +254,17 @@ const downloadDo = (fileId) => {
   document.location.href = api.attachmentDownload + '?fileId=' + fileId
   attachment.value.downloadCount = attachment.value.downloadCount + 1
 }
- //文章图片预览
+//文章图片预览
 const imageViewerRef = ref(null)
-const previewImgList = ref([]) 
-const imagePreview = ()=>{
-  nextTick(()=>{
+const previewImgList = ref([])
+const imagePreview = () => {
+  nextTick(() => {
     const imageNodeList = document.querySelector('#detail').querySelectorAll('img')
     const imageList = []
-    imageNodeList.forEach((item,index)=>{
+    imageNodeList.forEach((item, index) => {
       const src = item.getAttribute('src')
       imageList.push(src)
-      item.addEventListener('click', ()=>{
+      item.addEventListener('click', () => {
         imageViewerRef.value.show(index)
       })
     })
@@ -275,8 +273,8 @@ const imagePreview = ()=>{
 }
 
 //代码高亮
-const highlightCode = ()=>{
-  nextTick(()=>{
+const highlightCode = () => {
+  nextTick(() => {
     let blocks = document.querySelectorAll('pre code')
     blocks.forEach(item => {
       hljs.highlightBlock(item)
@@ -285,16 +283,19 @@ const highlightCode = ()=>{
 }
 
 //更新评论数量
-const updateCommentCount = (commentCount)=>{
+const updateCommentCount = (commentCount) => {
   articleInfo.value.commentCount = commentCount
 }
 
+//文章作者资料
+
+
 //获取目录
 const tocArray = ref([])
-const makeToc = ()=>{
-  nextTick(()=>{
+const makeToc = () => {
+  nextTick(() => {
     //定义要解析的标签
-    const tocTags = ["H1","H2","H3","H4","H5","H6"]
+    const tocTags = ["H1", "H2", "H3", "H4", "H5", "H6"]
     //获取所有H标签
     const contentDom = document.querySelector('#detail')
     const childNodes = contentDom.childNodes
@@ -302,7 +303,7 @@ const makeToc = ()=>{
     let index = 0
     childNodes.forEach(item => {
       let tagName = item.tagName
-      if(tagName == undefined || !tocTags.includes(tagName.toUpperCase())) {
+      if (tagName == undefined || !tocTags.includes(tagName.toUpperCase())) {
         return true
       }
       index++
@@ -319,23 +320,23 @@ const makeToc = ()=>{
   })
 }
 const anchorId = ref(null)
-const gotoAnchor = (domId)=>{
-  const dom = document.querySelector('#'+domId)
+const gotoAnchor = (domId) => {
+  const dom = document.querySelector('#' + domId)
   dom.scrollIntoView({
     behavior: "smooth",
     block: "start",
   })
 }
 //监听滚动条 关联目录一起变化
-const listenerScroll = ()=>{
+const listenerScroll = () => {
   let currenScrollTop = getScrollTop()
-  tocArray.value.some((item,index)=>{
-    if((index < tocArray.value.length -1 &&
-    currenScrollTop >= tocArray.value[index].offsetTop &&
-    currenScrollTop < tocArray.value[index + 1].offsetTop) ||
-    (index == tocArray.value.length -1 && 
-    currenScrollTop < tocArray.value[index].offsetTop)
-    ){
+  tocArray.value.some((item, index) => {
+    if ((index < tocArray.value.length - 1 &&
+      currenScrollTop >= tocArray.value[index].offsetTop &&
+      currenScrollTop < tocArray.value[index + 1].offsetTop) ||
+      (index == tocArray.value.length - 1 &&
+        currenScrollTop < tocArray.value[index].offsetTop)
+    ) {
       anchorId.value = item.id
       return true
     }
@@ -348,32 +349,32 @@ const getScrollTop = () => {
   return scrollTop
 }
 
-onMounted(()=>{
-  window.addEventListener("scroll", listenerScroll,false)
+onMounted(() => {
+  window.addEventListener("scroll", listenerScroll, false)
 })
-onUnmounted(()=>{
-  window.addEventListener("scroll", listenerScroll,false)
+onUnmounted(() => {
+  window.addEventListener("scroll", listenerScroll, false)
 })
 
 //根据后端接口判断是否关闭评论区
 const showComment = ref(false)
 //监听showComment
 watch(
-  ()=>store.state.sysSetting,
-  (newVal,oldVal)=>{
-    if(newVal){
+  () => store.state.sysSetting,
+  (newVal, oldVal) => {
+    if (newVal) {
       showComment.value = newVal.commentOpen
     }
   },
-  {immediate: true, deep: true}
+  { immediate: true, deep: true }
 )
 </script>
 
 
-
-<style lang="scss" >
+<style lang="scss"  scoped>
 .article-detail-body {
   position: relative;
+
   .board-info {
     line-height: 30px;
 
@@ -520,48 +521,60 @@ watch(
     background: #fff;
     margin-bottom: 30px;
     cursor: pointer;
+
     .iconfont {
       font-size: 22px;
       color: var(--text2);
     }
+
     .have-like {
       color: var(--link);
     }
-    .icon-good:hover{
+
+    .icon-good:hover {
       color: var(--link);
     }
-    .icon-comment:hover{
+
+    .icon-comment:hover {
       color: var(--link);
     }
-    .icon-attachment:hover{
+
+    .icon-attachment:hover {
       color: var(--link);
     }
   }
 }
-.toc-panel{
+
+
+.toc-panel {
   position: absolute;
   top: 35px;
   right: 0px;
   width: 285px;
-  .top-container{
+
+  .top-container {
     width: 285px;
     position: fixed;
     background: #fff;
-    .toc-title{
+
+    .toc-title {
       border-bottom: 1px solid #ddd;
       padding: 10px;
     }
-    .toc-list{
+
+    .toc-list {
       max-height: calc(100vh - 200px);
       overflow: auto;
       padding: 5px;
-      .no-toc{
+
+      .no-toc {
         text-align: center;
         color: #797979;
         font-size: 13px;
         line-height: 40px;
       }
-      .toc-item{
+
+      .toc-item {
         cursor: pointer;
         display: block;
         line-height: 35px;
@@ -572,16 +585,24 @@ watch(
         border-radius: 3px;
         font-size: 14px;
       }
-      .toc-item:hover{
+
+      .toc-item:hover {
         background: #dedfe0;
       }
-      .active{
+
+      .active {
         border-left: 2px solid #6ca1f7;
-        border-radius: 0px  3px 3px 0px; 
+        border-radius: 0px 3px 3px 0px;
         background: #dedfe0;
       }
     }
   }
-}
 
-</style>
+  .hot-recommend {
+    position: fixed;
+    width: 285px;
+    background: #fff;
+    border-radius: 5px;
+    
+  }
+}</style>
