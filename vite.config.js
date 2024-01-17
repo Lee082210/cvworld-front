@@ -11,14 +11,14 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  server:{
+  server: {
     hmr: true,
     port: 3304,
-    proxy:{
-      "/api":{
-        target: "http://localhost:8080",
+    proxy: {
+      "/api": {
+        target: "http://localhost:7070",
         changeOrigin: true,
-        pathRewrite:{
+        pathRewrite: {
           "^api": "/api"
         }
       }
