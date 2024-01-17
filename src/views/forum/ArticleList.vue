@@ -1,7 +1,8 @@
 <template>
   <div
     class="container-body article-list-body"
-    :style="{ width: proxy.globalInfo.bodyWidth + 'px' }">
+    :style="{ width: proxy.globalInfo.bodyWidth + 'px' }"
+  >
     <Swipper v-if="!pBoardId"></Swipper>
     <!-- 二级板块信息 -->
     <div class="sub-board" v-if="pBoardId">
@@ -10,7 +11,9 @@
       </span>
       <span
         v-for="item in subBoardList"
-        :class="['board-item', item.boardId == boardId ? 'active' : '']">
+        :key="item.boardId"
+        :class="['board-item', item.boardId == boardId ? 'active' : '']"
+      >
         <router-link :to="`/forum/${item.pBoardId}/${item.boardId}`">
           {{ item.boardName }}</router-link
         >
@@ -18,22 +21,39 @@
     </div>
     <div class="article-panel">
       <div class="top-tab">
-        <div :class="['tab', orderType == 0 ? 'active' : '']" @click="changeOrderType(0)">热榜</div>
+        <div
+          :class="['tab', orderType == 0 ? 'active' : '']"
+          @click="changeOrderType(0)"
+        >
+          热榜
+        </div>
         <el-divider direction="vertical"></el-divider>
-        <div :class="['tab', orderType == 1 ? 'active' : '']" @click="changeOrderType(1)">
+        <div
+          :class="['tab', orderType == 1 ? 'active' : '']"
+          @click="changeOrderType(1)"
+        >
           发布时间
         </div>
         <el-divider direction="vertical"></el-divider>
-        <div :class="['tab', orderType == 2 ? 'active' : '']" @click="changeOrderType(2)">最新</div>
+        <div
+          :class="['tab', orderType == 2 ? 'active' : '']"
+          @click="changeOrderType(2)"
+        >
+          最新
+        </div>
       </div>
       <div class="article-list">
         <DataList
           :loading="loading"
           :dataSource="articleListInfo"
           @loadData="loadArticle"
-          noDataMsg="没有发现帖子，赶紧发布一个吧">
+          noDataMsg="没有发现帖子，赶紧发布一个吧"
+        >
           <template #default="{ data }">
-            <ArticleListItem :data="data" :showComment="showComment"></ArticleListItem>
+            <ArticleListItem
+              :data="data"
+              :showComment="showComment"
+            ></ArticleListItem>
           </template>
         </DataList>
       </div>
@@ -42,95 +62,95 @@
 </template>
 
 <script setup>
-import Swipper from '@/components/Swipper.vue'
-import ArticleListItem from './ArticleListItem.vue'
-import { ref, reactive, getCurrentInstance, onMounted, watch } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useStore } from 'vuex'
-const { proxy } = getCurrentInstance()
-const router = useRouter()
-const route = useRoute()
-const store = useStore()
+import Swipper from "@/components/Swipper.vue";
+import ArticleListItem from "./ArticleListItem.vue";
+import { ref, reactive, getCurrentInstance, onMounted, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+const { proxy } = getCurrentInstance();
+const router = useRouter();
+const route = useRoute();
+const store = useStore();
 
 //从后端取得数据
 const api = {
-  loadArticle: '/forum/loadArticle',
-}
+  loadArticle: "/forum/loadArticle",
+};
 const changeOrderType = (type) => {
-  orderType.value = type
-  loadArticle()
-}
+  orderType.value = type;
+  loadArticle();
+};
 
 //文章列表
 //一级板块
-const pBoardId = ref(0)
+const pBoardId = ref(0);
 //二级板块
-const boardId = ref(0)
-const orderType = ref(0)
-const loading = ref(false)
-const articleListInfo = ref({})
+const boardId = ref(0);
+const orderType = ref(0);
+const loading = ref(false);
+const articleListInfo = ref({});
 const loadArticle = async () => {
-  loading.value = true
+  loading.value = true;
   let params = {
     pageNo: articleListInfo.value.pageNo,
     pBoardId: pBoardId.value,
     boardId: boardId.value,
     orderType: orderType.value,
-  }
+  };
   let result = await proxy.Request({
     url: api.loadArticle,
     params: params,
     showLoading: false,
-  })
-  loading.value = false
+  });
+  loading.value = false;
   if (!result) {
-    return
+    return;
   }
-  articleListInfo.value = result.data
+  articleListInfo.value = result.data;
   // articleListInfo.value.list = [];
-}
+};
 
 //二级板块
-const subBoardList = ref([])
+const subBoardList = ref([]);
 const setSubBoard = () => {
-  subBoardList.value = store.getters.getSubBoardList(pBoardId.value)
-}
+  subBoardList.value = store.getters.getSubBoardList(pBoardId.value);
+};
 
 //监听路由变化
 watch(
   () => route.params,
 
   (newVal, oldVal) => {
-    pBoardId.value = newVal.pBoardId
-    boardId.value = newVal.boardId || 0
-    setSubBoard() //二级板块变化时调用该方法
-    loadArticle() //加载文章
-    store.commit('setActivePboardId', newVal.pBoardId) //设置父板块
-    store.commit('setActiveBoardId', newVal.boardId) //设置子板块
+    pBoardId.value = newVal.pBoardId;
+    boardId.value = newVal.boardId || 0;
+    setSubBoard(); //二级板块变化时调用该方法
+    loadArticle(); //加载文章
+    store.commit("setActivePboardId", newVal.pBoardId); //设置父板块
+    store.commit("setActiveBoardId", newVal.boardId); //设置子板块
   },
   { immediate: true, deep: true }
-)
+);
 //监听板块数据的变化，如果后端休眠时间长，则前端一直拿不到数据
 watch(
   () => store.state.boardLsit,
   (newVal, oldVal) => {
-    setSubBoard()
+    setSubBoard();
   },
   { immediate: true, deep: true }
-)
+);
 
 //根据后端接口判断是否关闭评论区
-const showComment = ref(false)
+const showComment = ref(false);
 //监听showComment
 watch(
   () => store.state.sysSetting,
   (newVal, oldVal) => {
     if (newVal) {
-      showComment.value = newVal.commentOpen
+      showComment.value = newVal.commentOpen;
     }
   },
   { immediate: true, deep: true }
-)
+);
 </script>
 
 <style lang="scss">
