@@ -32,14 +32,14 @@
           :class="['tab', orderType == 1 ? 'active' : '']"
           @click="changeOrderType(1)"
         >
-          发布时间
+          升序
         </div>
         <el-divider direction="vertical"></el-divider>
         <div
           :class="['tab', orderType == 2 ? 'active' : '']"
           @click="changeOrderType(2)"
         >
-          最新
+          降序
         </div>
       </div>
       <div class="article-list">

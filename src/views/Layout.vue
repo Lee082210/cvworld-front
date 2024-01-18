@@ -12,9 +12,12 @@
           appear
         >
           <router-link to="/" class="logo">
-            <span v-for="item in logoInfo" :style="{ color: item.color }">{{
-              item.letter
-            }}</span>
+            <span
+              v-for="item in logoInfo"
+              :style="{ color: item.color }"
+              :key="item.color"
+              >{{ item.letter }}</span
+            >
           </router-link>
         </transition>
         <transition
@@ -33,7 +36,7 @@
             >
               首页</router-link
             >
-            <template v-for="board in boardList">
+            <template v-for="board in boardList" :key="board.boardId">
               <el-popover
                 placement="bottom-start"
                 :width="300"
@@ -58,6 +61,7 @@
                       subBoard.boardId == activeBoardId ? 'active' : '',
                     ]"
                     v-for="subBoard in board.children"
+                    :key="subBoard.boardId"
                     @click="subClickHandler(subBoard)"
                     >{{ subBoard.boardName }}
                   </span>
@@ -84,10 +88,7 @@
           <!-- 登录、注册、用户信息 -->
           <div class="user-info-panel">
             <div class="op-btn">
-              <el-button type="primary" class="op-btn" @click="isPost">
-                发帖
-              </el-button>
-              <el-button type="primary" class="op-btn" @click="goSearch">
+              <el-button class="op-btn" @click="goSearch">
                 <span class="iconfont icon-search"></span>
               </el-button>
             </div>
@@ -198,6 +199,9 @@
                   ></Avatar>
                   <template #dropdown>
                     <el-dropdown-menu>
+                      <el-dropdown-item @click="isPost"
+                        >发布帖子</el-dropdown-item
+                      >
                       <el-dropdown-item @click="gotoUcnter(userInfo.userId)"
                         >我的主页</el-dropdown-item
                       >
@@ -209,15 +213,10 @@
                 </el-dropdown>
               </div>
             </template>
-            <el-button-group :style="{ 'margin-left': '10px;' }" v-else>
-              <el-button
-                type="primary"
-                class="op-btn"
-                @click="loginAndRegister(1)"
-              >
-                登录<span class="iconfont icon-user"></span>
-              </el-button>
-              <!-- <el-button type="primary" plain @click="loginAndRegister(0)">注册</el-button> -->
+            <el-button-group :style="{ 'margin-left': '20px;' }" v-else>
+              <div @click="loginAndRegister(1)" class="op-btn">
+                <el-avatar :icon="UserFilled" />
+              </div>
             </el-button-group>
           </div>
         </transition>
@@ -236,7 +235,11 @@
           <el-col :span="6" class="item">
             <div class="logo">
               <div class="logo-letter">
-                <span v-for="item in logoInfo" :style="{ color: item.color }">
+                <span
+                  v-for="item in logoInfo"
+                  :style="{ color: item.color }"
+                  :key="item.color"
+                >
                   {{ item.letter }}
                 </span>
               </div>
@@ -285,6 +288,7 @@
 </template>
 
 <script setup>
+import { UserFilled } from "@element-plus/icons-vue";
 import "animate.css";
 import {
   ref,
@@ -609,8 +613,8 @@ watch(
       align-items: center;
 
       .op-btn {
+        cursor: pointer;
         margin-right: 5px;
-
         .iconfont {
           margin-left: 4px;
         }

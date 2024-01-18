@@ -1,5 +1,5 @@
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-::-webkit-scrollbar{
+::-webkit-scrollbar {
   width: 7px;
   height: 7px;
   background-color: #F5F5F5;
@@ -14,54 +14,63 @@
 }
 
 /*定义滑块 内阴影+圆角*/
-::-webkit-scrollbar-thumb{
+::-webkit-scrollbar-thumb {
   border-radius: 10px;
   box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .1);
-  background-color: #c8c8c8;
+  background-color: #559de6;
 }
-*{
+
+* {
   box-sizing: border-box;
 }
-:root{
-  --link:#007fff;
-  --pink:#ff6699;
-  --text2:#61666d;
-  --icon:#9499a0;
+
+:root {
+  --link: #007fff;
+  --pink: #ff6699;
+  --text2: #61666d;
+  --icon: #9499a0;
   --theme-color: #000;
   --theme-background: #fff;
 }
 
-a{
-    text-decoration: none;
-    // color: var(--link);
+a {
+  text-decoration: none;
+  // color: var(--link);
 }
+
 body {
   padding: 0;
   margin: 0;
   // background: rgb(243,243,243);
-  background-color: #ecf0f3;
-  }
+  // background-color: #ecf0f3;
+  background: linear-gradient(180deg, #E1F2F9 0%, #FFFFFF 100%);
+}
+
 .container-body {
   width: 1300px;
   margin: 0 auto;
   padding-top: 5px;
 }
-.a-link{
+
+.a-link {
   color: var(--link);
   cursor: pointer;
 }
-.el-form-item{
+
+.el-form-item {
   align-items: center;
 }
-.tag{
+
+.tag {
   font-size: 12px;
   border-radius: 3px;
   padding: 0 5px;
   margin-right: 5px;
   font-weight: normal;
 }
-.tag-no-audit{
+
+.tag-no-audit {
   color: var(--text2);
   border: 1px solid var(--text2);
 }
