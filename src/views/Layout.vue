@@ -249,12 +249,14 @@
             </div>
           </el-col>
           <el-col :span="6" class="item">
-            <div class="title">网站相关</div>
+            <div class="title">备案信息</div>
             <div>
-              <a href="">相关相关</a>
+              <a href="https://beian.miit.gov.cn"
+                >© 2024 liqicheng All rights reserved</a
+              >
             </div>
             <div>
-              <a href="">相关相关</a>
+              <a href="https://beian.miit.gov.cn">桂ICP备2024019458号</a>
             </div>
           </el-col>
           <el-col :span="6" class="item">
@@ -711,10 +713,8 @@ watch(
   .footer-content {
     padding-top: 10px;
   }
-
   .item {
-    text-align: left;
-
+    text-align: center;
     .title {
       font-size: 18px;
       margin-bottom: 10px;
