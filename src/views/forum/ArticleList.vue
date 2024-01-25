@@ -180,8 +180,8 @@ watch(
   }
 
   .article-panel {
-    // background: #fff;
-    background-color: rgba(236, 240, 243, 0.7);
+    background: #fff;
+    // background-color: rgba(236, 240, 243, 0.7);
     .top-tab {
       display: flex;
       align-items: center;

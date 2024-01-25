@@ -1,29 +1,43 @@
 <template>
   <div>
     <div class="header" v-show="showHeader">
+      <!-- logo -->
+      <transition
+        name="animate__animated animate__bounce"
+        enter-active-class="animate__backInLeft"
+        appear
+      >
+        <router-link to="/" class="logo">
+          <span
+            v-for="item in logoInfo"
+            :style="{ color: item.color }"
+            :key="item.color"
+            >{{ item.letter }}</span
+          >
+        </router-link>
+      </transition>
       <div
         class="header-content"
         :style="{ width: proxy.globalInfo.bodyWidth + 'px' }"
       >
-        <!-- logo -->
-        <transition
-          name="animate__animated animate__bounce"
-          enter-active-class="animate__backInLeft"
-          appear
-        >
-          <router-link to="/" class="logo">
-            <span
-              v-for="item in logoInfo"
-              :style="{ color: item.color }"
-              :key="item.color"
-              >{{ item.letter }}</span
-            >
-          </router-link>
-        </transition>
+        <div class="show-navigate">
+          <span
+            class="iconfont icon-expand"
+            v-if="showNavigate === 0"
+            @click="handlerShowNav(0)"
+          ></span>
+          <span
+            class="iconfont icon-collapse"
+            v-else
+            @click="handlerShowNav(1)"
+          ></span>
+        </div>
+
         <transition
           name="animate__animated animate__bounce"
           enter-active-class="animate__fadeInRight"
           appear
+          v-if="showNavigate === 1"
         >
           <!-- 板块信息 -->
           <div class="menu-panel">
@@ -79,7 +93,6 @@
             </template>
           </div>
         </transition>
-
         <transition
           name="animate__animated animate__bounce"
           enter-active-class="animate__fadeInUp"
@@ -193,6 +206,7 @@
               <div class="user-info">
                 <el-dropdown>
                   <Avatar
+                    class="avatar-userinfo"
                     :userId="userInfo.userId"
                     :width="50"
                     :addLink="false"
@@ -214,7 +228,7 @@
               </div>
             </template>
             <el-button-group :style="{ 'margin-left': '20px;' }" v-else>
-              <div @click="loginAndRegister(1)" class="op-btn">
+              <div @click="loginAndRegister(1)" class="op-btn avatar-userinfo">
                 <el-avatar :icon="UserFilled" />
               </div>
             </el-button-group>
@@ -306,6 +320,16 @@ const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+
+//是否显示菜单
+const showNavigate = ref(0); //0-隐藏  1-显示
+const handlerShowNav = (type) => {
+  if (type === 0) {
+    showNavigate.value = 1;
+  } else {
+    showNavigate.value = 0;
+  }
+};
 
 const logoInfo = ref([
   {
@@ -572,72 +596,77 @@ watch(
   box-shadow: 0px 2px 6px 0px #ddd;
   z-index: 1000;
   background: #fff;
-
+  .logo {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    text-decoration: none;
+    margin-top: 10px;
+    span {
+      font-size: 35px;
+    }
+  }
   .header-content {
-    margin: 0px auto;
+    position: relative;
     align-items: center;
+    margin: 0 auto;
     height: 60px;
     display: flex;
-
-    .logo {
-      text-decoration: none;
-      display: block;
-      margin-right: 5px;
-
+    .show-navigate {
       span {
-        font-size: 35px;
+        font-size: 20px;
+        cursor: pointer;
       }
     }
-
+    .show-navigate:hover {
+      transform: scale(1.5);
+      transition: 0.5s;
+    }
     .menu-panel {
       flex: 1;
-
       .menu-item {
         margin-left: 20px;
         cursor: pointer;
       }
-
       .home {
         color: #000;
       }
-
       .active {
-        // border-radius: 15px;
-        // padding: 5px 15px;
-        // background-color: rgba(50, 133, 255, 0.3);
         color: var(--link);
       }
     }
-
     .user-info-panel {
+      flex: 1;
+      position: fixed;
+      top: 10;
+      right: 0px;
       width: 300px;
       display: flex;
       align-items: center;
-
       .op-btn {
         cursor: pointer;
         margin-right: 5px;
         .iconfont {
           margin-left: 4px;
         }
-
         .el-button + .el-button {
           margin-left: 5px;
         }
       }
-
+      .avatar-userinfo:hover {
+        transform: scale(1.2);
+        transition: 0.5s;
+      }
       .message-info {
         cursor: pointer;
         margin: 0px 20px 0px 15px;
-
         .icon-message {
           font-size: x-large;
           color: #3285ff;
         }
       }
-
       .user-info {
-        // outline: none;
+        outline: none;
         cursor: pointer;
       }
     }
