@@ -54,8 +54,8 @@
                 <div>
                   <p>1、在垃圾箱中查找邮箱验证码</p>
                   <p>2、在邮箱中 头像->设置->反垃圾->白名单->设置邮件地址白名单</p>
-                  <p>3、将邮箱【154205993@qq.com】添加到白名单</p>
-                  <a target="_blank" href="http://easybbs.wuhancoder.com/post/46lrsLUQjQhpZyP"
+                  <p>3、将邮箱【xxxxxx@qq.com】添加到白名单</p>
+                  <a target="_blank" href="http://cvworld.icu/post/qpsnbRdraDXShPr"
                     >不知道怎么设置？</a
                   >
                 </div>

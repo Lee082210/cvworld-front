@@ -44,28 +44,29 @@
 import Avatar from "@/components/Avatar.vue";
 import { ref, reactive, getCurrentInstance } from "vue";
 
+
 //虚拟数据
 const userInfo = reactive([
   {
-    userId: 1890524956,
-    nickName: "测试账号",
-    personDescription: "我只是一个测试账号而已123",
+    userId: 674677068,
+    nickName: "coder_Cisily",
+    personDescription: "本站收获的第一个小用户哟，值得纪念！",
     sales: 100,
     age: "3年",
     Ratevalue: 3.5,
   },
   {
-    userId: 2793716985,
-    nickName: "程序员Lee",
-    personDescription: "真是ikun，只会唱跳Rap篮球和Music",
+    userId: 9147439941,
+    nickName: "站长Lee",
+    personDescription: "我是本站的小站长，欢迎来到cv小论坛哦，在这里你可以与小伙伴们互相交流技术哟！",
     sales: 89,
     age: "2.5年",
     Ratevalue: 4.5,
   },
   {
-    userId: 7437465925,
-    nickName: "测试账号02",
-    personDescription: "我是测试账号02，你想咋滴？",
+    userId: 2552341200,
+    nickName: "艾坤同学",
+    personDescription: "大家好我是小艾，出来乍盗请大家多多关照",
     sales: 199,
     age: "5年",
     Ratevalue: 4,

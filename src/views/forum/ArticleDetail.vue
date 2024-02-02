@@ -132,6 +132,7 @@
   <div class="quick-panel" :style="{ left: quickPanelLeft + 'px' }">
     <!-- 点赞图标 -->
     <el-badge
+      title="点赞"
       :value="articleInfo.goodCount"
       type="info"
       :hidden="!articleInfo.goodCount > 0"
@@ -144,6 +145,7 @@
     </el-badge>
     <!-- 评论图标 -->
     <el-badge
+      title="评论列表"
       v-if="showComment"
       :value="articleInfo.commentCount"
       type="info"
@@ -158,7 +160,7 @@
       </div>
     </el-badge>
     <!-- 附件图标 -->
-    <div class="quick-item" @click="goToPosition('view-attachment')">
+    <div title="附件" class="quick-item" @click="goToPosition('view-attachment')">
       <span class="iconfont icon-attachment"></span>
     </div>
     <!-- 图片预览 -->
@@ -172,7 +174,6 @@ import "highlight.js/styles/atom-one-light.css";
 import CommentList from "./CommentList.vue";
 import {
   ref,
-  reactive,
   getCurrentInstance,
   onMounted,
   nextTick,
@@ -437,17 +438,15 @@ watch(
 <style lang="scss" >
 .article-detail-body {
   position: relative;
-
   .board-info {
     line-height: 30px;
-
     .icon-right {
       margin: 0px 10px;
     }
   }
-
   .detail-container {
     .article-detail {
+      border-radius: 5px;
       background: #fff;
       padding: 15px;
 
@@ -611,8 +610,8 @@ watch(
   top: 35px;
   right: 0px;
   width: 285px;
-
   .top-container {
+  border-radius: 5px;
     width: 285px;
     position: fixed;
     background: #fff;

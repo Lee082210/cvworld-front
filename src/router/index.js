@@ -55,6 +55,11 @@ const router = createRouter({
           name: '搜索',
           component: () => import("@/views/Search.vue"),
         },
+        {
+          path:"/msgboard",
+          name:"留言板",
+          component:()=>import("@/views/forum/MessageBoard.vue")
+        },
       ]
     },
     {
@@ -62,6 +67,7 @@ const router = createRouter({
       name:"登录页",
       component:()=>import("@/views/LoginAndRegister.vue")
     },
+    
     {
       path:"/:pathMatch(.*)*",
       name:"错误页",

@@ -50,6 +50,9 @@
             >
               首页</router-link
             >
+            <span @click="handlerMessage"  
+            class="menu-item activePro"
+            >留言板</span>
             <template v-for="board in boardList" :key="board.boardId">
               <el-popover
                 placement="bottom-start"
@@ -312,7 +315,6 @@ import {
   getCurrentInstance,
   onMounted,
   watch,
-  nextTick,
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
@@ -320,6 +322,7 @@ const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
 const store = useStore();
+
 
 //是否显示菜单
 const showNavigate = ref(0); //0-隐藏  1-显示
@@ -471,7 +474,6 @@ const activePboardId = ref(0);
 watch(
   () => store.state.activePboardId,
   (newVal, oldVal) => {
-    // if (newVal != undefined) {
     activePboardId.value = newVal;
   },
   { immediate: true, deep: true }
@@ -505,6 +507,11 @@ const newPost = () => {
     router.push("/newPost");
   }
 };
+
+const handlerMessage = ()=>{
+  //跳转到留言板
+  router.push("/msgboard");
+}
 
 //点击我的主页跳转用户中心
 const gotoUcnter = (userId) => {
@@ -632,7 +639,18 @@ watch(
         color: #000;
       }
       .active {
-        color: var(--link);
+        padding: 5px 10px 5px 10px;
+        background-color: var(--link);
+        border-radius: 15px;
+        color: #fff;
+        transition: 0.3s;
+      }
+      .activePro{
+        padding: 5px 10px 5px 10px;
+        background-image: linear-gradient(to bottom right, #d834c2, #2088dd);
+        border-radius: 15px;
+        color: #fff;
+        transition: 0.3s;
       }
     }
     .user-info-panel {
