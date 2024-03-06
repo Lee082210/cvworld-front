@@ -1,5 +1,4 @@
 <template>
-  <!-- 弹窗组件 -->
   <div>
     <el-dialog 
     :model-value="show" 

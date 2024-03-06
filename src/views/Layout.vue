@@ -230,9 +230,9 @@
                 </el-dropdown>
               </div>
             </template>
-            <el-button-group :style="{ 'margin-left': '20px;' }" v-else>
+            <el-button-group style="margin-left: 20px" v-else>
               <div @click="loginAndRegister(1)" class="op-btn avatar-userinfo">
-                <el-avatar :icon="UserFilled" />
+                <el-avatar :icon="UserFilled"  title="去登录？"/>
               </div>
             </el-button-group>
           </div>
@@ -242,7 +242,6 @@
     <div class="body-content">
       <router-view></router-view>
     </div>
-    <!-- 底部footer -->
     <div class="footer" v-if="showFooter">
       <div
         class="footer-content container-body"
@@ -268,17 +267,18 @@
           <el-col :span="6" class="item">
             <div class="title">备案信息</div>
             <div>
-              <a href="https://beian.miit.gov.cn"
+              <a href="https://beian.miit.gov.cn" target="_blank"
                 >© 2024 liqicheng All rights reserved</a
               >
             </div>
             <div>
-              <a href="https://beian.miit.gov.cn">桂ICP备2024019458号</a>
+              <img :src="BEIAN" alt="" style="width: 15px; height: 15px;">
+              <a href="https://beian.miit.gov.cn" style="color: var(--link);" target="_blank">桂ICP备2024019458号-1</a>
             </div>
           </el-col>
           <el-col :span="6" class="item">
             <div class="title">友情链接</div>
-            <div><a href="http://liqicheng.top">友情链接</a></div>
+            <div><a href="http://liqicheng.top" target="_blank">友情链接</a></div>
           </el-col>
           <el-col :span="6" class="item">
             <div class="title-img">
@@ -289,9 +289,7 @@
         </el-row>
       </div>
     </div>
-    <!-- 回到顶部 -->
     <el-backtop :right="100" :bottom="100"></el-backtop>
-    <!-- 未登录状态操作时发送弹窗引导登录 -->
     <Dialog
       :show="dialogConfig.show"
       :buttons="dialogConfig.buttons"
@@ -307,6 +305,7 @@
 </template>
 
 <script setup>
+import BEIAN from "@/assets/images/beian.png";
 import { UserFilled } from "@element-plus/icons-vue";
 import "animate.css";
 import {

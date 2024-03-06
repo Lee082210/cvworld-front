@@ -21,25 +21,42 @@
     </div>
     <div class="article-panel">
       <div class="top-tab">
-        <div
+        <div class="tab-operation">
+          <span
           :class="['tab', orderType == 0 ? 'active' : '']"
           @click="changeOrderType(0)"
         >
           热榜
-        </div>
+        </span>
         <el-divider direction="vertical"></el-divider>
-        <div
+        <span
           :class="['tab', orderType == 1 ? 'active' : '']"
           @click="changeOrderType(1)"
         >
           升序
-        </div>
+        </span>
         <el-divider direction="vertical"></el-divider>
-        <div
+        <span
           :class="['tab', orderType == 2 ? 'active' : '']"
           @click="changeOrderType(2)"
         >
           降序
+        </span>
+        </div>
+        <div class="search-article">
+          <div>
+            <el-input
+              clearable
+              v-model="keywords"
+              style="max-width: 600px"
+              placeholder="请输入至少三个关键字"
+              @keyup.enter="handleSearch"
+            >
+              <template #append>
+                <el-button :icon="Search" @click="handleSearch"/>
+              </template>
+            </el-input>
+          </div>
         </div>
       </div>
       <div class="article-list">
@@ -51,8 +68,9 @@
         >
           <template #default="{ data }">
             <ArticleListItem
-              :data="data"
-              :showComment="showComment"
+            :data="data"
+            :showComment="showComment"
+            :htmlTitle="true"
             ></ArticleListItem>
           </template>
         </DataList>
@@ -67,6 +85,7 @@ import ArticleListItem from "./ArticleListItem.vue";
 import { ref, reactive, getCurrentInstance, onMounted, watch } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { Search } from '@element-plus/icons-vue'
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
@@ -75,6 +94,7 @@ const store = useStore();
 //从后端取得数据
 const api = {
   loadArticle: "/forum/loadArticle",
+  toSearch: "/forum/search",
 };
 const changeOrderType = (type) => {
   orderType.value = type;
@@ -151,6 +171,38 @@ watch(
   },
   { immediate: true, deep: true }
 );
+
+const keywords = ref('')
+const handleSearch = async() =>{
+  if(keywords.value.length !== 0){
+    loading.value  = true;
+    let params = {
+      pageNo: articleListInfo.value.pageNo,
+      keyword: keywords.value,
+    };
+    let result = await proxy.Request({
+      url: api.toSearch,
+      params: params,
+      showLoading: false,
+    })
+    if(!result){
+      return;
+    }
+    loading.value  = false;
+    //搜索关键字样式
+    let list = result.data.list;
+      list.forEach((element) => {
+        element.title = element.title.replace(
+          params.keyword,
+          "<span style='color:red'>" + params.keyword + "</span>"
+        );
+      });
+    articleListInfo.value = result.data;
+  }else{
+    loadArticle()
+  }
+}
+
 </script>
 
 <style lang="scss">
@@ -185,15 +237,14 @@ watch(
     .top-tab {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       padding: 10px 15px;
       font-size: 15px;
       border-bottom: 1px solid #e4e4e4;
     }
-
     .tab {
       cursor: pointer;
     }
-
     .active {
       color: var(--link);
     }

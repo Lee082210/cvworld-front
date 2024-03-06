@@ -1,8 +1,6 @@
 <template>
   <div class="login-body">
-    <el-button type="primary" class="back-index op-btn" @click="backToIndex()"
-      ><span class="iconfont icon-login"></span
-    ></el-button>
+    <el-button type="text" class="back-index op-btn" @click="backToIndex()">&lt;返回首页</el-button>
     <div class="login-form">
       <!-- <BackgroundParticles></BackgroundParticles> -->
       <div class="login-panel">
@@ -54,7 +52,7 @@
                 <div>
                   <p>1、在垃圾箱中查找邮箱验证码</p>
                   <p>2、在邮箱中 头像->设置->反垃圾->白名单->设置邮件地址白名单</p>
-                  <p>3、将邮箱【xxxxxx@qq.com】添加到白名单</p>
+                  <p>3、将邮箱【1542059993@qq.com】添加到白名单</p>
                   <a target="_blank" href="http://cvworld.icu/post/qpsnbRdraDXShPr"
                     >不知道怎么设置？</a
                   >
@@ -192,7 +190,6 @@
         </div>
       </div>
     </div>
-
     <!-- 发送邮箱验证码弹窗 -->
     <Dialog
       :show="dialogConfig4SendMailCode.show"
@@ -471,12 +468,14 @@ const qqLogin = async () => {
   document.location.href = result.data
 }
 
-//登录页动画效果方法
-
 //登录页返回首页按钮方法
 const backToIndex = () => {
-  router.push('/')
+  // router.push('/')
+  window.location.href = '/'
 }
+window.onpopstate = function(event) {
+    window.location.href = "/";
+};
 </script>
 
 <style lang="scss">

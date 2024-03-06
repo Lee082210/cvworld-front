@@ -26,21 +26,22 @@
           </div>
         </el-timeline>
       </div>
-      <div class="el-card-messages">
-        <div class="el-card-userinfo">
+      <el-form :inline="true" style="text-align: right;">
+        <el-form-item label="昵称">
           <el-input v-model="nickName" placeholder="请输入昵称" />
+        </el-form-item>
+        <el-form-item label="内容">
           <el-input
-            type="textarea"
-            :rows="5"
             placeholder="请输入留言"
             maxlength="200"
             v-model="message"
           ></el-input>
-        </div>
-          <el-button type="primary" round class="submit-message"  @click="sendMsg"
-          >留言</el-button
-        >
-      </div>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary"  @click="sendMsg">留言</el-button>
+        </el-form-item>
+        
+      </el-form>
     </el-card>
   </div>
 </template>
@@ -90,21 +91,11 @@ const delMessage = (index) => {
     width: 100%;
     height: 80px;
   }
-  .submit-message {
-    height: 100px;
-    width: 30%;
-    margin-top: 20px;
-    background: rgb(235, 245, 247);
-    color: cadetblue;
-    letter-spacing: 20px;
-    cursor: pointer;
-  }
 }
 
 @media screen and (max-width: 3000px) and (min-width: 767px) {
   .el-card-d {
-    float: left;
-    margin-top: 20px;
+    margin-top: 5%;
     margin-left: 10%;
     width: 80%;
     height: 90%;
